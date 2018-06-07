@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="utf-8" />
+    <title>Highcharts data from JSON Response</title>
+		<style>
+		body{
+			margin-top: 30px;
+			margin-left:40px;
+		}
+		</style>
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>		
+	<script src="http://code.highcharts.com/highcharts.js"></script>
+    <script type="text/javascript">
+    var da='';
+        $(function () {
+                var sent_trans = []; 
+                var received_trans = [];  
+                $.getJSON('http://localhost:8080/transaction', function(data) {
+                    // Populate series
+                    //console.log(data);
+                    var seen = {};
+                    data.forEach(function(element) {
+                        element.trans.forEach(function(trans){
+                            var item = trans.cntr_country;
+                            if(seen[item] === undefined) {
+                                seen[item] = {};
+                                seen[item].sent_trans = 0;
+                                seen[item].received_trans = 0;
+                            }
+                            if(trans.Transaction_type === "sent"){
+                                seen[item].sent_trans += trans.USD_money_amount;
+                            }
+                            else{
+                                seen[item].received_trans += trans.USD_money_amount;
+                            }
+                        });
+                    });
+                    for(var obj in seen){
+                        console.log(obj)
+                        console.log(seen[obj].sent_trans)
+                        sent_trans.push(seen[obj].sent_trans)
+                        received_trans.push(seen[obj].received_trans)
+                    }
+                    console.log(sent_trans)
+                    console.log(received_trans)
+                    var objects = []; 
+                            $.each(item, function (index, value) {
+                                    objects.push([value.name, value.value]);
+                                });
+                                console.log(objects);
+
+
+
+                    $('#container').highcharts({
+                    
+                    chart: {
+                        type: "bar"
+                    },
+                    title: {
+                        text: "Transaction"
+                    },
+                    xAxis: {
+                       
+                        categories: Object.keys(seen),
+                        crosshair: true
+                    },
+                    yAxis: {
+                        title: {
+                            text: "amount"
+                        }
+                    },
+                    series: [{
+	                    name: 'Sent',
+                        data: sent_trans
+                    }/*,
+                    {
+	                    name: 'Received',
+                        data: received_trans
+                    }*/]
+                }); 
+            });
+        });
+    </script>
+</head>
+<body>
+   <div style="width: 800px; margin: 2em auto; padding: 1em; border: 1px solid red; border-radius: 0.5em">
+	Highcharts data load from a JSON using manual JSON Processing
+	</div>
+    <div id="container" style="height: 400px"></div>
+    
+</body>
+</html>

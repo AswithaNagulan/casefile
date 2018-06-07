@@ -1,0 +1,1009 @@
+<html> 
+<head>
+<script src="https://cdn.zoomcharts-cloud.com/1/latest/zoomcharts.js" type="text/javascript"></script>
+<script type="text/javascript">
+var ZoomChartsLicense = "ZCS-1j13r82a0: ZoomCharts 7 days free trial development licence des..@..l.com (valid for evaluation only); upgrades until: 2018-03-26";
+var ZoomChartsLicenseKey = "97e2657f0b99afb8a0c16284ef2f5879b75e9afff4d7d73c50"+
+"f9eb4c49932c114542b06d07fa467d42090142818885e8d282a4410981674d3c4f4b496d4328e"+
+"4e35292e81a169fb0cf8ec5175cf53902ef3b0b3b9e1a59b220c08dc270b17fe2ebac4f4cce37"+
+"087fe8a7f036ff03408751fd38b5e92faafaab97c5cdb5ff77553232df25cb82b981c7d4e0161"+
+"d96eed8a07125b66db902e2d16a765380953d967a8426d3f75615e6801133beaf642050623db9"+
+"1cd757e5154a116abdde9e2215dd5c6be27bb55d2533e90bd67f9ebef212a5ddb24a57188a135"+
+"5810aab59e9bd9b6309d60eca3501368a15217e877a1d827b6e6069557e1c0ffe24a405bdcb97";
+</script>
+<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/no-data-to-display.js"></script>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<style>
+
+.navbar-inverse {
+    background-color: #002C89;
+    border-color: #080808;
+}
+.btn-info {
+    color: #fff;
+    background-color: #002C89;
+    border-color: #002C89;
+}
+select {
+	border-color: #002C89;
+}
+button, input, optgroup, select, textarea {
+    margin: 0;
+    font: inherit;
+    color: #002C89;
+    
+}
+body {
+    font-family: "Georgia";
+    font-size: 14px;
+    line-height: 1.42857143;
+    color: #0000b2;
+    background-color: #fff;
+}
+b, strong {
+    font-weight: 600;
+}
+
+		#topright{
+			   width:100%; 
+			   height: 7%; 
+			  
+			   background:white;
+			   float:left; 
+		
+		}
+#primo {
+  float : left;
+  width: 100%;
+  
+  background-color: #DCDCDC;
+  height:83%; 
+}
+.load {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  margin-left: -32px; /* -1 * image width / 2 */
+  margin-top: -32px; /* -1 * image height / 2 */
+}
+#secondo {
+  float : right;
+  width: 30%;
+  height:100%;
+}
+
+#right-top{
+  float : right;
+  width: 100%;
+  height:40%;
+  vertical-align: top;
+  padding-top: 1px;
+  padding-bottom: 286px;
+}
+.goBack {
+    background-color: #F43699;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    cursor: pointer;
+}
+
+#container1 {
+    float:left; 
+    width: 50%;
+	height: 250px;
+	margin-top:60px;
+}
+
+#container2 {
+	float: right;
+    margin-top:64px;
+    height:250px;
+    width: 50%;
+}
+.dot {
+	padding: 20px 20px 20px 20px;
+    height: 25px;
+    width: 25px;
+    background-color: #002C89;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot1 {
+	
+	padding: 20px 20px 20px 20px;
+    height: 25px;
+    width: 25px;
+    background-color: #1E90FF;
+    border-radius: 50%;
+    display: inline-block;
+}
+#right-up{
+  float : right;
+  width: 100%;
+  height:100%;
+  vertical-align: top;
+}
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+    border: 1px solid #0000b2;
+}
+#tab {
+    font-family: "Times New Roman", Times, serif;
+    width: 100%;
+	border: 1px solid grey;
+}
+#tab th {
+    text-align: center;
+    color: #0000b2;
+}
+#tab td {
+    text-align: center;
+    color: #0000b2;
+}
+</style>
+</head>
+
+<script>
+
+    var text=[];
+    var rawdata='';
+	var mydat = text;
+	var mydata = '';
+	var mydata1 = '';
+	var mydata2 = [];
+	var key1, key2, key3,key4,key5;
+	var link1='';
+	var link2='';
+	var sizetotal=0;
+	var table_data='';
+	var accountFilter=false;
+    var transactionFilter=false;
+    var accountType='';
+    var n=1;
+    var aa={};
+    var greater=0;
+	let rawSet = new Set();
+    let suspectSet = new Set();
+    var  table_data='';
+    var index=0;
+    var com=0,den=0,rev=0,com_money=0,den_money=0,rev_money=0,senCom_money=0,senDen_money=0,senRev_money=0,com1=0,den1=0,rev1=0;
+	$.getJSON('http://localhost:4000/suspect1', function(data) {
+		   mydata = (data);
+			var key=[];
+			for(var i=0;i<mydata.length;i++) {
+			  key[i]=mydata[i].AccountNumber;
+			}
+			key1=Object.keys(mydata[0].data);
+			//console.log(key1);
+			key2=Object.keys(mydata[0].data11);
+			
+			key3=Object.keys(mydata[0].sar[0]);
+			//console.log(key3);
+			
+			
+    });
+	$.getJSON('http://localhost:4000/counter1', function(data) {
+		mydata1 = (data);
+		 var key=[];
+		 for(var i=0;i<mydata1.length;i++) {
+		   key[i]=mydata1[i].CounterpartyAccountNumber;
+		 }
+		 key4=Object.keys(mydata1[0].counterdata);
+		//drawChart();
+ });
+ $.getJSON('http://localhost:8080/v1/casefilesampledataserv/casefile/transactions?account=1556194837325487402,1931414401940183232,1846750505078856667,1785417861198280619,1387223669011871996,1279427224167795565,2093910551006744419,1581565211190403045,1256692339883366170,1441904986977654890,1279427224167795565,1196382066304742003,1514459963017501346', function(data) {
+		rawdata = (data);
+		mydata2 = (data);
+		 var key=[];
+		 for(var i=0;i<mydata2.length;i++) {
+		   key[i]=mydata2[i].AccountNumber;
+		 }
+		 key5=Object.keys(mydata2[0].trans);
+		 for(var i=0;i<rawdata.length;i++) {
+			rawSet.add(rawdata[i].AccountNumber);
+			suspectSet.add(mydata2[i].AccountNumber);
+			for(var j=0;j<rawdata[i].trans.length;j++) {
+            	rawSet.add(rawdata[i].trans[j].cntr_party);
+            }
+		}
+		drawChart();
+		
+ });
+ 
+ 
+ function buildData(nodeList, success) {
+        var nodes = [];
+        var links = [];
+        var i;
+        let accountSet = new Set();
+		
+		let rawSet1= new Set();
+		
+        let transactionSet = new Set();
+		
+        for(var i=0;i<mydata2.length;i++) {
+			//if(mydata2[i].AccountNumber!='null')
+            accountSet.add(mydata2[i].AccountNumber);
+            for(var j=0;j<mydata2[i].trans.length;j++) {
+				if(mydata2[i].trans[j].cntr_party!='null')
+                	accountSet.add(mydata2[i].trans[j].cntr_party);
+            }
+        }
+        // console.log("Acc",accountSet);
+        //  console.log("RAW :",rawSet);
+		//  console.log("Sus :",suspectSet);
+		
+			var i=0;
+        for(let acc of accountSet) {
+            var type = ''
+            if(suspectSet.has(acc)) 
+			type = 'suspect';
+            else 
+			type = 'counterParty';
+			 nodes.push({
+                "id": acc,
+                "loaded": true,
+				//"name":'Ashu',
+                "type":type,
+                "style": {
+                    label: "" + acc
+                }
+            });
+        }
+   
+        //console.log(nodes)
+
+        for(var i=0;i<mydata2.length;i++) {
+            var from=mydata2[i].AccountNumber;
+           // console.log("From :",from);
+            for(var j=0;j<mydata2[i].trans.length;j++) {
+                var to=mydata2[i].trans[j].cntr_party;
+                //console.log(to);
+                links.push({ "id": i + "_" + from + "_" + to, "from": from, "to": to });
+            }
+        }
+            success({ "nodes": nodes, "links": links });
+    }
+
+		function drawChart() {
+				var chart= new NetChart({
+				"navigation": {
+					
+					"mode": "showall"
+				},
+				"style": {
+					"node": {
+						"lineColor": "white",
+						"imageCropping": true
+					},
+                     nodeStyleFunction: nodeStyle,
+					 linkStyleFunction: linkStyle
+				},
+				"container": "primo",
+				"data":{ dataFunction: buildData },
+				"toolbar": {
+					"fullscreen": true,
+					
+                    "enabled": true,
+                    "items":
+                    [
+                        //{ item: "zoomcontrol", side: "left", align: "bottom" },
+                        { item: "fit", side: "left", align: "bottom" },
+                        { item: "rearrange", side: "bottom", align: "left" },
+                        { item: "fullscreen", side: "bottom", align: "left" }
+                    ]
+				},
+				"interaction": {
+					"resizing": {
+						"enabled": false
+					}
+				},
+				"info":{
+				"enabled": true,
+				"nodeContentsFunction": function(itemData, item){
+						   return "<div style='margin:auto; width:100%; height:100%; padding': 10px;>" +
+										"<h3 style='font-weight: 300; font-size: 20px; color: #2f256e; padding-bottom: 3px; margin:0px'>"+itemData.id +"</h3>" +
+								   "</div>";
+					  },
+					  "linkContentsFunction": function(itemData, item){
+								link1=item.from.data.id;
+								link2=item.to.data.id;
+							
+							  return  "<p style='padding:3px;color: #2f256e;'>" +  item.from.data.id +  " transacted with " + item.to.data.id  +"</b></p></div>";
+						}
+				},
+				"events" : {
+						onClick:logClickEvent
+				},
+				"filters": {
+                        nodeFilter: nodeFilter,
+                        multilinkProcessor: multilinkProcessor
+					}
+			});
+		
+			
+			function nodeFilter(nodeData){
+					//console.log(nodeData.type + " - " + accountFilter + " - " + accountType);
+                    if(accountFilter==true && accountType != '') {
+                        return nodeData.type == accountType;
+                    }
+                    return nodeData;
+				}
+				
+			function nodeStyle(node,rawdata) {
+                    node.label=node.data.id;
+					
+					if(node.data.type=='suspect') {
+                        node.fillColor="#002C89";
+                    }
+                    if(node.data.type=='counterParty') {
+                        node.fillColor="#1E90FF";
+                    }
+                    var nodesize = node.data.id;
+                    var s=getSize(nodesize);
+                    var minR = 10;
+                    var maxR = 20;
+                    var minT = 10;
+                    var maxT = 10000;
+                    var s1=minR + ((s - minT) / (maxT - minT)) * ( maxR - minR) ;
+                    // console.log(s1);
+                    node.radius = minR + ((s - minT) / (maxT - minT)) * ( maxR - minR) ;
+                }
+                function multilinkProcessor(linksData, fromNodeData, toNodeData) {
+                   // console.log(linksData);
+                    return linksData[0];
+                } 
+	
+	 function linkStyle(link){
+		 link.cursor = "crosshair";
+    }
+  
+	function getSize(nodesize) {
+								var c1=0,c2=0;
+									for(var i=0;i<mydata2.length;i++) {
+										for(var l=0;l<mydata2[i].trans.length;l++) {
+											var t=mydata2[i].trans[l];
+											
+											if(mydata2[i].AccountNumber==nodesize) {
+                                                c1+=mydata2[i].trans[l].usd_money_amount;
+											//c1++;
+											}
+											if(mydata2[i].AccountNumber!=nodesize && t.cntr_party==nodesize) {
+											c2+=mydata2[i].trans[l].usd_money_amount;
+											}
+										}
+									}
+								sizetotal=(c1+c2)/2;
+                                // console.log("SIZETOTAL :",sizetotal)
+								return sizetotal;
+								}
+			
+	function logClickEvent(event){
+        if (event.clickNode){
+		res=event.clickNode.data.id;
+		if (event.clickNode.data.type=="suspect"){
+		displaySuspectDetails(res); 
+		}
+		if (event.clickNode.data.type=="counterParty"){
+		displayCounterDetails(res); 
+		}
+        }else if (event.clickLink){
+			linkDetails(link1,link2);
+            
+        }else{
+           // console.log(" on nothing");
+       		 }
+   	 	}
+	}
+			function displayCounterDetails(res) {
+				var j=0,count=0;
+							   var per=[];
+							//   table_data='';
+							   var table_data1='';
+							   for(var i=0;i<mydata1.length;i++) {
+									var t=mydata1[i].counterdata;
+									if(mydata1[i].CounterpartyAccountNumber==res) {
+									count++;
+									per[j]=t;
+									j++;
+									}
+								}
+								if(per.length==0 || count==0){
+										 $('#right-up').html("<h3>No records found</h3>");
+								}
+								else{
+								for(var i=0;i<per.length;i++) {
+								if(i==0){
+								table_data1+='<h5 align="center" font size="2" ><b>COUNTERPARTY_ACCOUNT_DETAILS</b></h5>';
+								}
+								for(var j=0;j<key4.length;j++) {
+									//table_data += '<tr>';
+									table_data1 +='<font size="3"><b>'+ key4[j]+ ' : '+'</b></font>' ;
+									var temp=per[i];
+									table_data1 +='<font size="2">'+ temp[key4[j]]+'</font>' ;
+									table_data1 += '<br>';
+								}
+								}
+								}	
+                                //$('#right-top').html(table_data);
+                                $('#right-top').html(table_data1);
+								$('#right-up').hide();
+								
+
+			}
+			function displaySuspectDetails(res) {
+				//console.log("res",res);
+							  var  table_data1='';
+							   var j=0,count=0;
+							   var per=[];
+							  table_data='';
+							   for(var i=0;i<mydata.length;i++) {
+									var t=mydata[i].data;
+									if(mydata[i].AccountNumber==res) {
+									count++;
+									per[j]=t;
+									j++;
+									}
+                                }
+                                table_data+='<br>';
+								if(per.length==0 || count==0){
+										 $('#right-up').html("<h3>No records found</h3>");
+								}
+								else{
+								for(var i=0;i<per.length;i++) {
+								if(i==0){
+								table_data+='<h5 align="center" font size="2" ><b>ACCOUNT_DETAILS</b></h5>';
+								}
+								for(var j=0;j<key1.length;j++) {
+									//table_data += '<tr>';
+									table_data +='<font size="3"><b>'+ key1[j]+ ' : '+'</b></font>' ;
+									var temp=per[i];
+									table_data +='<font size="2">'+ temp[key1[j]]+'</font>' ;
+									table_data += '<br>';
+								}
+								}
+								}
+							
+								 com=0,den=0,rev=0,com_money=0,den_money=0,rev_money=0,senCom_money=0,senDen_money=0,senRev_money=0,com1=0,den1=0,rev1=0;
+								for(var i=0;i<rawdata.length;i++) {
+								 for(var l=0;l<rawdata[i].trans.length;l++) {
+									var t=rawdata[i].trans[l];
+									if(rawdata[i].AccountNumber==res && t.transaction_type=='received' &&t.transaction_status=='completed') {
+									com++;
+									com_money+=t.usd_money_amount;
+									}
+									if(rawdata[i].AccountNumber==res && t.transaction_type=='received' &&t.transaction_status=='denied') {
+									den++;
+									den_money+=t.usd_money_amount;
+									}
+									if(rawdata[i].AccountNumber==res && t.transaction_type=='received' &&t.transaction_status=='reversed') {
+									rev++;
+									rev_money+=t.usd_money_amount;
+									}
+									if(rawdata[i].AccountNumber==res && t.transaction_type=='sent' &&t.transaction_status=='completed') {
+									com1++;
+									senCom_money+=t.usd_money_amount;
+									}
+									if(rawdata[i].AccountNumber==res && t.transaction_type=='sent' &&t.transaction_status=='denied') {
+									den1++;
+									senDen_money+=t.usd_money_amount;
+									}
+									if(rawdata[i].AccountNumber==res && t.transaction_type=='sent' &&t.transaction_status=='reversed') {
+									rev1++;
+									senRev_money+=t.usd_money_amount;
+									}
+								 }
+								}
+								
+								sizetotal=com+den+rev+com1+den1+rev1;
+								//console.log("SizeTotal",sizetotal);
+								table_data+='<h5 align="center" font size="2"><b>TXN SENT/RECEIVED(COUNT,USD EQUIVALENT)<b></h5>';
+								table_data+='<table class="tab" onclick="disp(this);" align="center"style="cursor: pointer;"><tr><th>Type </th><th>Status</th><th>Trans_USD</th> <th>&nbsp;&nbsp; Count of trans_id</th></tr>';
+								table_data+='<tbody><tr onclick="myFunction(this)"><td align="left"><b>received</b></td><td>completed</td><td align="center">'+ com_money+'</td><td align="center"  >'+com+'</td></tr>';
+								table_data+='<tr onclick="myFunction(this)"><td></td><td>denied</td><td align="center">'+den_money +'</td><td align="center">'+den+'</td></tr>';
+								table_data+='<tr onclick="myFunction(this)"><td></td><td>reversed</td><td align="center">'+ rev_money+'</td><td align="center">'+rev+'</td></tr>';
+								
+								table_data+='<tr onclick="myFunction(this)"><td align="left"><b>sent</b></td><td>completed</td><td align="center">'+ senCom_money+'</td><td align="center">'+com1+'</td></tr>';
+								table_data+='<tr onclick="myFunction(this)"><td></td><td>denied</td><td align="center">'+ senDen_money+'</td><td align="center">'+den1+'</td></tr>';
+								table_data+='<tr onclick="myFunction(this)"><td></td><td>reversed</td><td align="center">'+senRev_money +'</td><td align="center">'+rev1+'</td></tr></tbody></table>';
+                                per=[];
+								j=0,count=0;
+							   for(var i=0;i<mydata.length;i++) {
+									var t=mydata[i].data11;
+									if(mydata[i].AccountNumber==res) {
+									count++;
+									per[j]=t;
+									j++;
+									}
+								}
+								if(per.length==0 || count==0){
+										 $('#right-up').html("<h3>No records found</h3>");
+								}
+								else{
+								for(var i=0;i<per.length;i++) {
+								if(i==0){
+								table_data+='<h5 align="center" font size="2"><b>LIMITATIONS</b></h5>';
+								}
+								for(var j=0;j<key2.length;j++) {
+									table_data +='<font size="3"><b>'+ key2[j]+ ' : '+'</b></font>' ;
+									var temp=per[i];
+									table_data +='<font size="2">'+ temp[key2[j]]+'</font>' ;
+									table_data += '<br>';
+								}
+								}
+								}
+
+								per=[];
+								j=0,count=0;
+							   for(var i=0;i<mydata.length;i++) {
+								   if(mydata[i].AccountNumber==res) {
+								for(var k=0;k<mydata[i].sar.length;k++) {
+									var t=mydata[i].sar[k];
+									
+									count++;
+									per[j]=t;
+									j++;
+									}
+								}
+								}
+							//	console.log("LENGTH :",per.length);
+								if(per.length==0 || count==0){
+									table_data+='<h5 align="center" font size="2"><b>PREVIOUS SAR</b></h5>';
+									table_data+='<h5 align="center" font size="2"><b>No previous SAR filings found</b></h5>';
+										
+								}
+								else{
+								for(var i=0;i<per.length;i++) {
+								if(i==0){
+								table_data+='<h5 align="center" font size="2"><b>PREVIOUS SAR</b></h5>';
+								}
+								for(var j=0;j<key3.length;j++) {
+									table_data +='<font size="3"><b>'+ key3[j]+ ' : '+'</b></font>' ;
+									var temp=per[i];
+									table_data +='<font size="2">'+ temp[key3[j]]+'</font>' ;
+									table_data += '<br>';
+								}
+								}
+                                }
+								
+								table_data1 += '<div id="container1" /> <div id="container2" />';
+								$('#right-top').html(table_data1);
+			
+                                bar();
+                               
+								function bar() {
+                                    $(function () {   
+                                    var sent_trans = []; 
+                                        var received_trans = [];  
+                                           // console.log(res);
+                                            var seen = {};
+                                            rawdata.forEach(function(element,index) {
+                                                if(rawdata[index].AccountNumber==res){
+                                                element.trans.forEach(function(trans){
+                                                    var item = trans.cntr_country;
+                                                    if(seen[item] === undefined) {
+                                                        seen[item] = {};
+                                                        seen[item].sent_trans = 0;
+                                                        //seen[item].received_trans = 0;
+                                                    }
+                                                    if(trans.transaction_type === "sent"){
+                                                        seen[item].sent_trans += trans.usd_money_amount;
+                                                    }
+                                                    
+                                                      });
+                                                    }
+                                          
+                                          });
+                                                var obj=0,i=0;
+                                                var inp_data = [];
+                                                for( obj in seen){
+                                                 sent_trans.push(seen[obj].sent_trans)
+                                                 if(seen[obj].sent_trans!=0) {
+                                                     var temp = {}
+                                                    temp.name = obj
+                                                    temp.y = seen[obj].sent_trans
+                                                    inp_data.push(temp)
+                                                 }
+                                                }
+                                                console.log(inp_data);
+
+
+
+                                                var seen1 = {};
+                                                rawdata.forEach(function(element,index) {
+                                                    if(rawdata[index].AccountNumber==res){
+                                                element.trans.forEach(function(trans){
+                                                    var item = trans.cntr_country;
+                                                    if(seen1[item] === undefined) {
+                                                        seen1[item] = {};
+                                                        seen1[item].received_trans = 0;
+                                                    }
+                                                    if(trans.transaction_type === "received"){
+                                                        seen1[item].received_trans += trans.usd_money_amount;
+                                                    }
+                                                    
+                                                      });
+                                                    }
+                                          
+                                          });
+                                                var obj1=0;
+                                                var inp_data1 = [];
+                                                for( obj1 in seen1){
+                                                   
+                                                   received_trans.push(seen1[obj1].received_trans)
+                                                    var temp = {}
+                                                    if(seen1[obj1].received_trans!=0) {
+                                                    temp.name = obj1
+                                                    temp.y = seen1[obj1].received_trans
+                                                    inp_data1.push(temp)
+                                                    }
+                                                }
+                                                 console.log("Inp :",inp_data)
+                                                    /*var data = {
+                                                    "subvalues": [
+                                                    {
+                                                        "value": 50, "name": "Apples"},
+                                                        { "value": 25, "name": "Red apples" },
+                                                        { "value": 15, "name": "Yellow apples" },
+                                                        { "value": 10, "name": "Green apples"  },
+                                                   
+                                                    { "value": 50, "name": "Vegetables", style: { fillColor: "yellow" } }]
+                                                };*/
+                                                function pieData(nodeList, success) {
+                                                    console.log("Pie");
+                                                    var subvalues = [];
+                                                    var pie=0;
+                                                for(let acc of inp_data) {
+                                                       
+                                                       
+                                                        subvalues.push({
+                                                            "value":pie++ ,
+                                                            "name": "Apples"
+                                                            
+                                                            
+                                                        });
+                                                    }
+                                                    success({ "subvalues": subvalues});
+                                                }
+                                                function myDataFunction(pieId, limit, offset, successCallback, errorCallback) {
+                                                    //let's have a custom error handling code
+                                                    var myErrorCallback = function () {
+                                                        if (window.console) console.log("There was an error while requesting data for pie '" + pieId + "'");
+                                                        errorCallback();
+                                                    };
+                                                    console.log("Pie");
+                                                    var subvalues = [];
+                                                    var pie=0;
+                                                    for(let acc of inp_data) {
+                                                        var a=acc.y;
+                                                        console.log(typeof a)
+
+                                                      
+                                                   }
+                                                for(let acc of inp_data) {
+                                                       
+                                                       
+                                                        subvalues.push({
+                                                            "value":acc.y ,
+                                                            "name": acc.name
+                                                            
+                                                            
+                                                        });
+                                                    }
+                                                    successCallback({ "subvalues": subvalues});
+
+
+                                                    // using jquery for ajax call
+                                                    //construct URL for requested pie and let jQuery do the rest.
+                                                    /*jQuery.ajax({
+                                                        url: "https://zoomcharts.com/dvsl/data/pie-chart/browsersById/" + pieId + ".json",
+                                                        success: successCallback,
+                                                        error: myErrorCallback
+                                                    });*/
+                                                }
+
+                                                var t = new PieChart({
+                                                    container: "container1",
+                                                    //area: { height: 350 },
+                                                    data: { dataFunction: myDataFunction },
+                                                    chart: {           
+                                                        margin: [0, 0, 0, 0],
+                                                        spacingTop: 0,
+                                                        spacingBottom: 0,
+                                                        spacingLeft: 0,
+                                                        spacingRight: 0
+                                                    },
+                                                    //labels:{enabled:false},
+                                                   
+                                                    plotOptions: {
+                                                        pie: {
+                                                            size:'100%',
+                                                            radius:'100%',
+                                                            dataLabels: {
+                                                                enabled: false
+                                                            }
+                                                        }
+                                                    }
+                                                });
+
+
+                                        });
+								}
+					
+								
+								$('#right-up').show();
+							   $('#right-up').html(table_data);
+							  
+							
+							}
+
+								function linkDetails(link1,link2) {
+									// table_data='';
+								//	console.log(link1,link2);
+									//alert(link1+" "+link2);
+									var table_data1='';
+									table_data1+='<h5 align="center" font size="2"><b>TRANSACTION BETWEEN '+link1+' AND '+link2+' </b></h5>';
+									//table_data+='<h6>transaction_type transaction_status usd_money_amount cntr_country</h6>';
+									for(var i=0;i<mydata2.length;i++) {
+									var t1=mydata2[i].AccountNumber;
+									//console.log(t1);
+										for(var j=0;j<mydata2[i].trans.length;j++) {
+												var full=mydata2[i].trans[j];
+												var t=mydata2[i].trans[j].cntr_party;
+												//console.log(t);
+												if(link1==t1 && link2==t) {
+												//console.log("FULL");
+												//console.log(full.usd_money_amount);
+												table_data1+='<h6><b>transaction_type :</b>'+full.transaction_type+'</h6><h6><b>transaction_status :</b>'+full.transaction_status+'</h6><h6><b>usd_money_amount :</b>'+full.usd_money_amount+'</h6><h6><b>Cntr_country :</b>'+full.cntr_country+'</h6>';
+												//table_data +='<font size="3"><b>'+ key3[i%3]+ ' : '+'</b></font>' ;
+												//var temp=full[j];
+												//table_data +='<font size="2">'+ temp[key3[j]]+'</font>' ;
+												table_data1 += '<br>';
+												}
+                                                if(link1==t && link2==t1) {
+												//console.log("FULL");
+												//console.log(full.usd_money_amount);
+												table_data1+='<h6><b>transaction_type :</b>'+full.transaction_type+'</h6><h6><b>transaction_status :</b>'+full.transaction_status+'</h6><h6><b>usd_money_amount :</b>'+full.usd_money_amount+'</h6><h6><b>Cntr_country :</b>'+full.cntr_country+'</h6>';
+												//table_data +='<font size="3"><b>'+ key3[i%3]+ ' : '+'</b></font>' ;
+												//var temp=full[j];
+												//table_data +='<font size="2">'+ temp[key3[j]]+'</font>' ;
+												table_data1 += '<br>';
+												}
+										}
+									
+									}
+									
+
+
+
+									$('#right-top').html(table_data1);
+									$('#right-up').hide();
+									
+								
+								}
+                               
+                                function filterFunc(b) {
+									//alert(b);
+                                    mydata2=[];
+
+									//console.log(rawdata);
+									for(var i=0;i<rawdata.length;i++) {
+                                       var transaction = [];
+                                        for(var j=0;j<rawdata[i].trans.length;j++) {
+											//alert(greater);
+                                            if(greater==1) {
+                                                if(rawdata[i].trans[j].usd_money_amount>b) {
+                                                    transaction.push(rawdata[i].trans[j]); 
+                                                }
+                                            }
+                                            if(greater==0) {
+                                                if(rawdata[i].trans[j].usd_money_amount<b) {
+                                                    transaction.push(rawdata[i].trans[j]); 
+                                                }
+                                            }
+                                        }
+										if(transaction.length != 0) {
+											var account = new Object();
+											account.AccountNumber = rawdata[i].AccountNumber;
+											account.trans = transaction;
+											mydata2.push(account);
+											//console.log(account)
+										}
+                                    }
+                                   //console.log(mydata2);
+                                }
+
+								function filter(filterValue) {
+									if(filterValue=='all') {
+                                         accountFilter = false;
+                                    }
+                                    accountType = filterValue
+                                    //alert('accountType ' + accountType)
+									// 'suspect' || 'counterParty'
+								
+								}
+								function transaction(transactionType, transactionValue) {
+								
+									if(transactionType==1)
+                                        greater=1;
+                                    else
+                                        greater=0;
+                                    filterFunc(transactionValue);
+                                    
+								
+								}
+								function filterall(){
+									table_data='';
+									table_data1='';
+									
+									var accountVal = document.getElementById("AccountFilter").value;
+									//alert('accountVal' + accountVal);
+									var transactionType =document.getElementById("TransactionFilter").value;
+                                   // alert('transactionType' + transactionType);
+									var transactionValue =document.getElementById("amount").value;
+                                    //alert('transactionValue' + transactionValue);
+
+                                    accountFilter = false;
+                                    transactionFilter = false;
+                                    mydata2=rawdata;
+									if(accountVal!='') {
+                                        accountFilter = true;
+                                        filter(accountVal);
+                                    }
+                                    if(transactionType!='') {
+                                        transactionFilter = true;
+                                        transaction(transactionType, transactionValue);
+									}
+                                    drawChart();
+									$('#right-up').html(table_data);
+									$('#right-top').html(table_data1);
+                                }
+                                function myFunction(x) {
+                                    //alert("Row index is: " + x.rowIndex);
+                                    index=x.rowIndex;
+                                }
+                                function disp(control) {           
+                   
+                                                    
+                                                    var table_data2='';
+                                                    var table = document.getElementsByTagName("table")[0];
+                                                    // var tbody = table.getElementsByTagName("tbody")[0];
+                                                    
+                                                        table.onclick = function (e) {
+                                                            table_data2='';
+                                                            e = e || window.event;
+                                                            var data = [];
+                                                            var target = e.srcElement || e.target;
+                                                            while (target && target.nodeName !== "TR") {
+                                                                target = target.parentNode;
+                                                            }
+                                                           
+                                                       // console.log("index",index)
+                                                            if (target) {
+                                                                var cells = target.getElementsByTagName("td");
+                                                                for (var i = 1; i < cells.length; i++) {
+                                                                    data.push(cells[i].innerHTML);
+                                                                   
+                                                                    
+                                                                }
+                                                                data.push(index);
+                                                            }
+                                                            //console.log(data[0],data[3]);
+                                                            var type='received';
+                                                            if(data[3]>3) {
+                                                                type='sent';
+                                                            }
+                                                            //console.log(data[0])
+                                                            // console.log(data[3])
+                                                            // console.log(type)
+                                                           // alert(data,data[3]);
+                                                           // alert(index);
+                                                           // alert("type",type)
+                                                           table_data2+='<h5  font size=5 style="color: #F43699;  "><b>TRANSACTIONS DONE BY '+res+' </b><br><br><button type="button" class="goBack" style="float: right;" value="Go back"  onclick="show();">Go Back</button></h5><br>';
+                                                          
+                                                            for(var i=0;i<rawdata.length;i++) {
+                                                                //console.log(rawdata[i].AccountNumber,res,data[0]);
+                                                                for(var j=0;j<rawdata[i].trans.length;j++) {
+                                                                    var full=rawdata[i].trans[j];
+                                                                    if(rawdata[i].AccountNumber==res && rawdata[i].trans[j].transaction_status==data[0] &&rawdata[i].trans[j].transaction_type==type) {
+                                                                        
+                                                                        // console.log("gggg",)   
+                                                                        // console.log(full.transaction_status);
+                                                                        // table_data2+='<h6 style="color: #F43699";>'+full.cntr_party+'</h6><h6>'+full.transaction_type+'</h6><h6>'+full.transaction_status+'</h6><h6>'+full.usd_money_amount+'</h6>';
+                                                                            table_data2+='<h6 style="color: #F43699"; ><b>Counter_Party :</b>'+full.cntr_party+'</h6><h6 style="color: #F43699"; ><b>Transaction_type :</b>'+full.transaction_type+'</h6><h6 style="color: #F43699"; ><b>Transaction_status :</b>'+full.transaction_status+'</h6><h6 style="color: #F43699"; ><b>usd_money_amount :</b>'+full.usd_money_amount+'</h6><h6 style="color: #F43699"; ><b>Cntr_country :</b>'+full.cntr_country+'</h6><br>';
+                                                                            //table_data2+=rawdata[i].trans[j];
+                                                                                
+                                                                    }
+                                                                }
+                                                               
+                                                            
+                                                        }
+                                                       // alert(table_data2) 
+                                                       //console.log(table_data2)
+                                                        
+                                                        
+                                                        //console.log(table_data1)
+                                                       // $('#right-top').show();
+                                                        $('#right-up').html(table_data2); 
+                                                        $('#right-top').hide();
+                                                        };
+                                                        
+                                                       
+                                        }
+                                                        function show() {
+                                                            //alert("Show");
+                                                            $('#right-top').show();
+                                                            $('#right-up').html(table_data);
+                                                        }
+                                                                                        
+                    
+
+
+
+</script>
+<body>
+		<nav class="navbar navbar-inverse navbar-fixed-top">
+				<p style=" color: white;
+				background-color:#002C89;
+				text-align: center;
+				font-size: 30px;">Case File Visualization</p> 
+			</nav>
+			<!--<div id="heading"><h5 align="center" font size="2"><b>Case File Visualization</b></h5> </div>-->
+			<!-- <div class="container" style="margin-top:55px;background-color:#002C89;"></div> -->
+			<div class="container" style="width:1275px !important;margin-left:-16px !important;">
+			<div  id="topright" style="margin-top:55px">
+					<form name="Myform">
+							<b style="color:#002C89;">Accounts Filter : </b>
+							<select id="AccountFilter">
+								<option value="">Accounts Filter</option>
+								<option value="all">Original</option>
+								<option value="suspect">Display suspects</option>
+								<option value="counterParty">Display counterParties</option>
+							  </select>
+							 <!-- <button type="button" name="account" id="account" class="btn btn-info">Select</button>-->
+							<b style="color:#002C89;">Transaction Filter : </b>
+							<!--<select id="TransactionFilter" onchange="if (this.value=='1' || this.value=='0'){this.form['other'].style.visibility='visible'}else {this.form['other'].style.visibility='hidden'};">-->
+					    <select id="TransactionFilter">
+						<option value="">Transaction Filter  </option>
+						<option value="1">Transaction Amount Greater Than</option>
+						<option value='0'>Transaction Amount Less Than</option>
+						</select>
+					<input type="textbox" name="other" id="amount" placeholder="Enter the amount" style="border-color:#002C89;border-width: 1px;"/>
+					<button type="button" name="all" onclick="filterall();" class="btn btn-info">Select</button>
+				   
+					</form >
+			</div>
+			<div class="row">
+			<div class="col-md-8">
+				<div id="primo">
+					<div class="load">
+						<img src="C:\Users\anagulan\Pictures\Camera Roll/load1.gif" alt="This will display an animated GIF" width="100" height="100"/>
+					</div>
+					</div>
+			</div>
+			<div class="col-md-4" style="overflow: auto;height: 500px;">
+				<div id="right-top" > 
+					
+					<div id="container1" >
+							<span class="dot"></span><font size=4 color=#002C89><b>Suspect</b></font>
+					</div>
+					<div id="container2" >
+							
+							<span class="dot1"></span><font size=4 color=#1E90FF><b>CounterParty</b></font>
+					</div>
+					
+				</div>
+				<div id="right-up" ><font size=5 align='center'><b>Click on the nodes and links to get the account details</b></font>
+					<img src="C:\Users\anagulan\Pictures\Camera Roll/click.gif" alt="This will display an animated GIF" width="80" height="100"/>
+				</div>
+			</div>
+			</div>
+		</div>
+</body>
+</html>
